@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { Swiper as SwiperInstance } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
@@ -26,10 +26,13 @@ const getRootRemInPixels = () => {
 
 export function SimilarCarsSection(props: SimilarCarsSectionProps) {
   const { cars, title } = props
+  const viewportRef = useRef<HTMLDivElement | null>(null)
   const [swiper, setSwiper] = useState<SwiperInstance | null>(null)
   const [isBeginning, setIsBeginning] = useState(true)
   const [isEnd, setIsEnd] = useState(false)
   const [slideGap, setSlideGap] = useState(getRootRemInPixels)
+  const [slideOffset, setSlideOffset] = useState(() => getRootRemInPixels() * 1.5)
+  const [slideWidth, setSlideWidth] = useState(0)
 
   const syncNavigationState = (instance: SwiperInstance) => {
     setIsBeginning(instance.isBeginning)
@@ -37,18 +40,45 @@ export function SimilarCarsSection(props: SimilarCarsSectionProps) {
   }
 
   useEffect(() => {
-    // Swiper expects spacing in px, while the layout defines it in rem.
-    const syncSlideGap = () => {
-      setSlideGap(getRootRemInPixels())
+    const syncCarouselMetrics = () => {
+      const rootRem = getRootRemInPixels()
+      const nextSlideGap = rootRem
+      const nextSlideOffset = rootRem * 1.5
+      const viewportWidth = viewportRef.current?.clientWidth ?? 0
+      const nextSlideWidth =
+        viewportWidth > 0
+          ? (viewportWidth - nextSlideOffset - (3 * nextSlideGap)) / 4
+          : 0
+
+      setSlideGap(nextSlideGap)
+      setSlideOffset(nextSlideOffset)
+      setSlideWidth(nextSlideWidth)
     }
 
-    syncSlideGap()
-    window.addEventListener('resize', syncSlideGap)
+    syncCarouselMetrics()
+
+    const resizeObserver = new ResizeObserver(() => {
+      syncCarouselMetrics()
+    })
+
+    if (viewportRef.current) {
+      resizeObserver.observe(viewportRef.current)
+    }
+
+    window.addEventListener('resize', syncCarouselMetrics)
 
     return () => {
-      window.removeEventListener('resize', syncSlideGap)
+      resizeObserver.disconnect()
+      window.removeEventListener('resize', syncCarouselMetrics)
     }
   }, [])
+
+  useEffect(() => {
+    swiper?.update()
+    if (swiper) {
+      syncNavigationState(swiper)
+    }
+  }, [slideGap, slideOffset, slideWidth, swiper])
 
   return (
     <section className="similar-cars" aria-labelledby="similar-cars-title">
@@ -80,46 +110,54 @@ export function SimilarCarsSection(props: SimilarCarsSectionProps) {
         </div>
       </header>
 
-      <Swiper
-        className="similar-cars__swiper"
-        slidesPerView="auto"
-        spaceBetween={slideGap}
-        speed={500}
-        watchOverflow
-        onSwiper={(instance) => {
-          setSwiper(instance)
-          syncNavigationState(instance)
-        }}
-        onSlideChange={syncNavigationState}
-        onResize={syncNavigationState}
-      >
-        {cars.map((car) => (
-          <SwiperSlide className="similar-cars__slide" key={car.id}>
-            <article className="similar-car-card">
-              <div className="similar-car-card__image-wrapper">
-                <img
-                  className="similar-car-card__image"
-                  src={car.imageSrc}
-                  alt={car.imageAlt}
-                />
+      <div className="similar-cars__viewport" ref={viewportRef}>
+        <Swiper
+          className="similar-cars__swiper"
+          slidesPerView="auto"
+          spaceBetween={slideGap}
+          slidesOffsetBefore={slideOffset}
+          slidesOffsetAfter={0}
+          speed={500}
+          watchOverflow
+          onSwiper={(instance) => {
+            setSwiper(instance)
+            syncNavigationState(instance)
+          }}
+          onSlideChange={syncNavigationState}
+          onResize={syncNavigationState}
+        >
+          {cars.map((car) => (
+            <SwiperSlide
+              className="similar-cars__slide"
+              key={car.id}
+              style={slideWidth > 0 ? { width: `${slideWidth}px` } : undefined}
+            >
+              <article className="similar-car-card">
+                <div className="similar-car-card__image-wrapper">
+                  <img
+                    className="similar-car-card__image"
+                    src={car.imageSrc}
+                    alt={car.imageAlt}
+                  />
 
-                <button
-                  className="similar-car-card__favorite-button"
-                  type="button"
-                  aria-label="Добавить в избранное"
-                >
-                  <FavoriteHeartIcon />
-                </button>
-              </div>
+                  <button
+                    className="similar-car-card__favorite-button"
+                    type="button"
+                    aria-label="Добавить в избранное"
+                  >
+                    <FavoriteHeartIcon />
+                  </button>
+                </div>
 
-              <div className="similar-car-card__content">
-                <h3 className="similar-car-card__title">{car.title}</h3>
-                <p className="similar-car-card__price">{car.price}</p>
-              </div>
-            </article>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+                <div className="similar-car-card__content">
+                  <h3 className="similar-car-card__title">{car.title}</h3>
+                  <p className="similar-car-card__price">{car.price}</p>
+                </div>
+              </article>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
     </section>
   )
 }

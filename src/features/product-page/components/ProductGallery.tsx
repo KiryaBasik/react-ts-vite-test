@@ -22,48 +22,50 @@ export function ProductGallery(props: ProductGalleryProps) {
         <span>{catalogLabel}</span>
       </button>
 
-      <section className="product-gallery" aria-label="Галерея автомобиля">
-        <div className="product-gallery__main">
-          <img
-            className="product-gallery__main-image"
-            src={activeImage.src}
-            alt={activeImage.alt}
-          />
-        </div>
+      <div className="product-gallery__sticky">
+        <section className="product-gallery" aria-label="Галерея автомобиля">
+          <div className="product-gallery__main">
+            <img
+              className="product-gallery__main-image"
+              src={activeImage.src}
+              alt={activeImage.alt}
+            />
+          </div>
 
-        <ul className="product-gallery__thumbnails" aria-label="Превью фотографий">
-          {thumbnailSlots.map((image, index) => {
-            if (!image) {
+          <ul className="product-gallery__thumbnails" aria-label="Превью фотографий">
+            {thumbnailSlots.map((image, index) => {
+              if (!image) {
+                return (
+                  <li key={`empty-slot-${index}`} className="product-gallery__thumbnail-item">
+                    <div className="product-gallery__thumbnail-placeholder" aria-hidden="true" />
+                  </li>
+                )
+              }
+
+              const isActive = image.id === activeImage.id
+
               return (
-                <li key={`empty-slot-${index}`} className="product-gallery__thumbnail-item">
-                  <div className="product-gallery__thumbnail-placeholder" aria-hidden="true" />
+                <li key={image.id} className="product-gallery__thumbnail-item">
+                  <button
+                    className={`product-gallery__thumbnail-button${
+                      isActive ? ' product-gallery__thumbnail-button--active' : ''
+                    }`}
+                    type="button"
+                    aria-pressed={isActive}
+                    onClick={() => onImageSelect(image.id)}
+                  >
+                    <img
+                      className="product-gallery__thumbnail-image"
+                      src={image.thumbnailSrc}
+                      alt={image.alt}
+                    />
+                  </button>
                 </li>
               )
-            }
-
-            const isActive = image.id === activeImage.id
-
-            return (
-              <li key={image.id} className="product-gallery__thumbnail-item">
-                <button
-                  className={`product-gallery__thumbnail-button${
-                    isActive ? ' product-gallery__thumbnail-button--active' : ''
-                  }`}
-                  type="button"
-                  aria-pressed={isActive}
-                  onClick={() => onImageSelect(image.id)}
-                >
-                  <img
-                    className="product-gallery__thumbnail-image"
-                    src={image.thumbnailSrc}
-                    alt={image.alt}
-                  />
-                </button>
-              </li>
-            )
-          })}
-        </ul>
-      </section>
+            })}
+          </ul>
+        </section>
+      </div>
     </>
   )
 }

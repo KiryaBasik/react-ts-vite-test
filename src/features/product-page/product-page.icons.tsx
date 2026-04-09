@@ -92,18 +92,18 @@ export function BannerArrowRightIcon(props: SVGProps<SVGSVGElement>) {
 export function FavoriteHeartIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
-      viewBox="0 0 36 36"
+      viewBox="0 0 18 17"
       fill="none"
       aria-hidden="true"
       focusable="false"
       {...props}
     >
       <path
-        d="M18 14.1404C16.25 9.83867 10.125 10.2968 10.125 15.795C10.125 21.2931 18 25.875 18 25.875C18 25.875 25.875 21.2931 25.875 15.795C25.875 10.2968 19.75 9.83867 18 14.1404Z"
+        d="M8.625 3.64042C6.875 -0.661327 0.75 -0.203152 0.75 5.29498C0.75 10.7931 8.625 15.375 8.625 15.375C8.625 15.375 16.5 10.7931 16.5 5.29498C16.5 -0.203152 10.375 -0.661327 8.625 3.64042Z"
         stroke="#04134A"
+        strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeWidth="1.5"
       />
     </svg>
   )

@@ -5,9 +5,6 @@
   --page-card-radius: 2rem;
   --page-inline-padding: 1.5rem;
   --similar-cars-gap: 1rem;
-  --similar-car-card-width: calc(
-    (var(--page-max-width) - (3 * var(--similar-cars-gap))) / 4
-  );
   --similar-car-image-height: 20rem;
 
   display: flex;
@@ -31,12 +28,12 @@
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  width: var(--page-max-width);
+  width: min(var(--page-max-width), 100%);
 }
 
 .product-page__primary {
   display: grid;
-  grid-template-columns: repeat(2, var(--page-column-width));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--page-grid-gap);
   align-items: start;
 }
@@ -58,16 +55,15 @@
 }
 
 .product-page__gallery-column {
-  position: sticky;
-  top: 2rem;
   gap: 5.5rem;
-  width: var(--page-column-width);
-  align-self: start;
+  width: 100%;
+  height: 100%;
+  align-self: stretch;
 }
 
 .product-page__details-column {
   gap: var(--page-grid-gap);
-  width: var(--page-column-width);
+  width: 100%;
 }
 
 .catalog-button,
@@ -110,11 +106,17 @@
 
 .product-gallery {
   gap: var(--page-grid-gap);
-  width: var(--page-column-width);
+  width: 100%;
+}
+
+.product-gallery__sticky {
+  position: sticky;
+  top: 1.875rem;
+  width: 100%;
 }
 
 .product-gallery__main {
-  width: var(--page-column-width);
+  width: 100%;
   height: 39.0625rem;
   overflow: hidden;
   border-radius: var(--page-card-radius);
@@ -165,7 +167,7 @@
 }
 
 .details-card {
-  width: var(--page-column-width);
+  width: 100%;
   padding: 2rem;
   border-radius: var(--page-card-radius);
   background: #ffffff;
@@ -396,7 +398,7 @@
 
 .similar-cars {
   gap: 2.5rem;
-  width: calc(var(--page-max-width) + var(--page-inline-padding));
+  width: 100%;
 }
 
 .similar-cars__header {
@@ -404,13 +406,20 @@
   align-items: flex-end;
   justify-content: space-between;
   gap: 2rem;
-  width: var(--page-max-width);
+  width: 100%;
 }
 
 .similar-cars__controls {
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
+}
+
+.similar-cars__viewport {
+  position: relative;
+  left: calc(-1 * var(--page-inline-padding));
+  width: calc(100% + (2 * var(--page-inline-padding)));
+  overflow: hidden;
 }
 
 .similar-cars__nav-button {
@@ -436,7 +445,6 @@
 }
 
 .similar-cars__slide {
-  width: var(--similar-car-card-width) !important;
   height: auto;
 }
 
@@ -470,8 +478,8 @@
 
 .similar-car-card__favorite-button svg {
   display: block;
-  width: 1rem;
-  height: 0.875rem;
+  width: 1.125rem;
+  height: 1.0625rem;
 }
 
 .similar-car-card__content {
@@ -500,7 +508,7 @@
 
 .selection-banner {
   position: relative;
-  width: var(--page-max-width);
+  width: min(var(--page-max-width), 100%);
   height: 25.8125rem;
 }
 
