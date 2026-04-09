@@ -1,0 +1,90 @@
+@font-face {
+  font-family: "Roboto Flex";
+  src:
+    url("./assets/fonts/RobotoFlex-Variable.woff2") format("woff2"),
+    url("./assets/fonts/RobotoFlex-Variable.woff") format("woff");
+  font-style: normal;
+  font-weight: 100 1000;
+}
+
+@font-face {
+  font-family: "Roboto Mono";
+  src:
+    url("./assets/fonts/RobotoMono-Variable.woff2") format("woff2"),
+    url("./assets/fonts/RobotoMono-Variable.woff") format("woff");
+  font-style: normal;
+  font-weight: 100 700;
+}
+
+:root {
+  --page-background: #f5f6fb;
+  --card-background: #ffffff;
+  --card-border: #e5e7f0;
+  --separator: #e6e8f2;
+  --text-primary: #0b1334;
+  --text-muted: #afb4c6;
+  --accent: #2d56ff;
+  --accent-soft: #e2e6fd;
+  --accent-contrast: #ffffff;
+  --button-dark: #091132;
+  --button-dark-contrast: #ffffff;
+  --banner-background: #050c2a;
+  --banner-contrast: #ffffff;
+  --banner-muted: #aeb9de;
+  --banner-button-background: #ffffff;
+  --banner-button-text: #091132;
+  --font-body: "Roboto Flex", sans-serif;
+  --font-display: "Roboto Flex", sans-serif;
+  --font-family: "Roboto Flex", sans-serif;
+  --second-family: "Roboto Mono", monospace;
+
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  background-color: var(--page-background);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--page-background);
+}
+
+html {
+  font-size: 0.833vw;
+}
+
+body,
+h1,
+h2,
+h3,
+p,
+dl,
+dt,
+dd {
+  margin: 0;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+#root {
+  min-height: 100vh;
+}
